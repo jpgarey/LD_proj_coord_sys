@@ -1,0 +1,202 @@
+/*
+This Singular file demonstrates generation of points, and point
+doubling operations on ECC over GF(2^3) = GF(8).
+*/
+
+/*********
+This is a Procedure to do point doubling
+(x3, y3) = 2P(x1, y1). Proc takes a "list" P, where P[1] = x1, P[2] =
+y1, and returns a list R = [x3, y3].
+**********/
+proc PplusP(list P){
+list R;
+number m, x3, y3;
+
+//"List P is:";
+//P;
+
+m = P[1] + P[2]/P[1];
+// a = alpha^2
+x3 = m^2 + m + X^2; 
+y3 = P[1]^2 + (m+1)*x3;
+
+//"m, x3, y3 are:";
+//m;
+//x3;
+//y3;
+
+R = x3, y3;
+
+//"List R:";
+//R;
+
+return(R);
+
+}
+
+/*********
+This is a Procedure to do point addition
+ Proc takes a "list" P and a "list Q", where P[1] = x1, P[2] =
+y1, and returns a list R = [x3, y3].
+**********/
+
+proc PplusQ(list P,list Q){
+list R;
+number m, x3, y3;
+if(Q[1] + P[1] == 0){
+  printf("Point at infinity");
+  return(0,0);
+}
+m = (Q[2] + P[2]) / (Q[1] + P[1]);
+// a = alpha^2
+x3 = m^2 + m + X^2 + Q[1] + P[1]; 
+y3 = m*(P[1] + x3) + P[2] + x3;
+
+R = x3, y3;
+
+return(R);
+
+}
+
+/*********
+This is a Procedure to do point doubling
+(x2, y2) = 2P(x1, y1). Proc takes a "list" P, where P[1] = x1, P[2] =
+y1, and returns a list R = [x3, y3]. a = X^2 b = 1
+**********/
+proc DL_PplusP(list P){
+list R;
+number m, x2, y2;
+
+//"List P is:";
+//P;
+
+m = P[1] + P[2]/P[1];
+// a = alpha^2
+x2 = P[1]^2 + (1/P[1]^2);
+y2 = (1/P[1]^2) + X^2*x2 + (P[2]^2 + 1)*(1+(1/P[1]^4));
+
+R = x2, y2;
+
+//"List R:";
+//R;
+
+return(R);
+
+}
+
+
+// Declare the ring over GF(8), with 2 variables, x and y
+
+ring r = (2, X), (y, x), lp;
+// This is the primitive polynomial given to us as a specification
+// Here X = \alpha
+minpoly = X^3 + X^2 + 1;
+int i;
+// print values of X
+printf("PART A");
+printf("printing values of alpha:");
+for(i=0; i<8; i = i+1){
+    printf("X%s is: %s",i,X^i);
+}
+
+
+// This is the non-singular elliptic curve also given to us as the spec
+poly E = y^2 + x*y + x^3 + X^2*x^2 + 1;
+
+// Now we will generate the points
+int i;
+// We use poly f to generate the points
+poly f;
+
+printf("when i = %s", 0);
+// Substitute x = 0 in E
+f = subst(E, x, 0);
+printf("poly f is:");
+f;
+printf("poly f factorizes as follows:");
+factorize(f);
+"================================";
+
+// 0 = special element, now we generate the remaining 7 elements
+printf("PART B");
+for(i=1; i<8; i = i+1){
+printf("when x = %s", X^i);
+f = subst(E, x, X^i);
+printf("poly f after substitution of x =%s:", X^i);
+f;
+printf("poly f factorizes as:");
+factorize(f);
+
+"================================";
+}
+printf("");
+// number = element in the field
+number x1, y1;
+list P;
+list R;
+
+x1 = X^6;
+y1 = 1;
+//x1 = 0;
+//y1 = 1;
+P = x1, y1;
+R = PplusP(P);
+R;
+int j;
+printf("");
+printf("SCHROEPPEL");
+printf("--------------------------");
+printf("Generating All the points with primitive element P: (X^6,1)");
+"Point 1: ";
+printf("P = (%s, %s)", P[1], P[2]);
+for(j = 1; j<14; j = j+1){
+    // doubling point first
+    printf("Point %s: ",j + 1);
+    if( j == 1){
+    R = PplusP(P);
+    
+    printf("P = (%s, %s)", R[1], R[2]);
+    }
+    else{
+    
+      R =  PplusQ(P,R);
+      printf("P = (%s, %s)", R[1], R[2]);
+    }
+    
+}
+
+
+printf("");
+printf("LOPEZ DAHAB POINT DOUBLING");
+printf("--------------------------");
+printf("Generating All the points with primitive element P: (X^6,1)");
+"Point 1: ";
+printf("P = (%s, %s)", P[1], P[2]);
+for(j = 1; j<14; j = j+1){
+    // doubling point first
+    printf("Point %s: ",j + 1);
+    if( j == 1){
+    R = DL_PplusP(P);
+    
+    printf("P = (%s, %s)", R[1], R[2]);
+    }
+    else{
+    
+      R =  PplusQ(P,R);
+      printf("P = (%s, %s)", R[1], R[2]);
+    }
+    
+}
+
+"";
+int p;
+"printing only doubled points on the field using DL";
+p = 2;
+for(j = 1; j<4; j = j+1){
+    P = DL_PplusP(P);
+    printf("Point %s= (%s, %s)",p, P[1], P[2]);
+    p = p*2;
+}
+
+
+    
