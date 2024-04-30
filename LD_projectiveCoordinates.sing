@@ -84,6 +84,54 @@ return(R);
 
 }
 
+/*********
+For hardware verification, do math to change point from
+projective coordinate system to affine coordinate system.
+**********/
+proc ProjectiveToAffine(list P){
+	number xa,ya,za;
+	list R;
+	
+	xa = P[1];
+	ya = P[2];
+	za = P[3];
+	
+	// Don't know syntax for else if, sorry for the ugly nested if's
+	if (za == 0) {
+		if (xa != 0 and ya != 0) {
+			printf("    (m,n,0) means Line meets curve at infinity");
+			R[1] = "infinity";
+			R[2] = "infinity";
+		}
+		else {
+			if (xa == 0 and ya == 0) {
+					printf("    (0,0,0) means point at infinity.");
+					R[1] = "infinity";
+					R[2] = "infinity";
+			
+			}
+			else {
+				if (xa == 0) {
+					printf("    (0,n,0) means Vertical line.");
+					R[1] = 0;
+					R[2] = "infinity";
+				}
+				else { // (ya == 0)
+					printf("    (m,0,0) means Horizantle line.");
+					R[1] = "infinity";
+					R[2] = 0;
+				}
+			}
+		}
+	}
+	else {
+		R[1] = xa / za;
+		R[2] = ya / za^2;
+	}
+
+	return (R);
+}
+
 
 // Declare the ring over GF(8), with 2 variables, x and y
 
@@ -251,3 +299,131 @@ printf("(X3,Y3,Z3) = (%s,%s,%s)",X3,Y3,Z3);
 printf("X3/Z3 = %s",X3/Z3);
 // Double the point Z3
 printf("Y3/(Z3^2) = %s",Y3/(Z3^2));
+
+
+printf("");
+"HARDWARE VERIFICATION for ALL points";
+"-----------------------------";
+number xa,ya,za;
+printf("proj coord point  ->  affine coord point");
+xa = X2 + X;
+ya = 1;
+za = 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P0: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2;
+ya = X2 + X + 1;
+za = X + 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P1: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + X + 1;
+ya = 0;
+za = X2 + X;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P2: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + X + 1;
+ya = X2 + 1;
+za = X2;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P3: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + X;
+ya = X + 1;
+za = X2 + 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P4: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2;
+ya = X2;
+za = X;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P5: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = 0;
+ya = X2;
+za = X;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P6: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + 1;
+ya = X2;
+za = X2;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P7: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X;
+ya = X;
+za = X + 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P8: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + X + 1;
+ya = X + 1;
+za = X2;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P9: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X;
+ya = X2 + X + 1;
+za = X2 + 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P10: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X;
+ya = X2 + X + 1;
+za = X2 + X + 1;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P11: (%s,%s,%s)", P[1],P[2],P[3]);
+printf(" -> (%s,%s)",R[1],R[2]);
+
+xa = X;
+ya = X;
+za = X2;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P12: (%s,%s,%s)", P[1],P[2],P[3]);
+printf("  -> (%s,%s)",R[1],R[2]);
+
+xa = X2 + X;
+ya = 0;
+za = 0;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P13: (%s,%s,%s)", P[1],P[2],P[3]);
+printf("  -> (%s,%s)",R[1],R[2]);
+
+xa = 0;
+ya = 0;
+za = 0;
+P = xa,ya,za;
+R = ProjectiveToAffine(P);
+printf("P14: (%s,%s,%s)", P[1],P[2],P[3]);
+printf("  -> (%s,%s)",R[1],R[2]);
+printf("Expecting P14 == P0");
+
