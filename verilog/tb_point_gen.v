@@ -55,16 +55,12 @@ module tb_point_gen;
     );
 
     initial  begin
-        verilog_output = $fopen("C:/Users/Jared Garey/Desktop/ECE6920_HwSecurity/LD_proj_coord_sys/point_gen.txt", "w");
+        verilog_output = $fopen("C:/Users/18019/Documents/UofU/SPRING2024/HWSecurity/HW/Project/point_gen.txt", "w");
         if (verilog_output == 0) begin
             $display("Error: Failed to open file.");
             $finish;
         end
 
-        X0 = 3'b101;
-        Y0 = 3'b001;
-        Z0 = 3'b001;
-		  
         X0 = 3'b110;
         Y0 = 3'b001;
         Z0 = 3'b001;
@@ -72,7 +68,9 @@ module tb_point_gen;
 		  $fwrite(verilog_output, "Starting Point (X0,Y0,Z0)=(%b,%b,%b)\n",X0,Y0,Z0);
 
 		  for (i = 1; i < 15; i = i + 1) begin
-				
+
+            $display(i);
+            // Doubling First point Expecting (111,010) in singular
 		      if (i == 1) begin // Point double
 					xdbl_i = X0;
 					ydbl_i = Y0;
@@ -82,18 +80,22 @@ module tb_point_gen;
 					Y1 = ydbl_o;
 					Z1 = zdbl_o;
 					#10;
+					//$fwrite(verilog_output, "P(%b)=(X,Y,Z)=(%b,%b,%b)\n",i,xdbl_o,ydbl_o,zdbl_o);
 			   end else begin    // Point add
-					xadd_a = X1;
-					yadd_a = Y1;
-					zadd_a = Z1;
-					xadd_b = X0;
-					yadd_b = Y0;
-					zadd_b = Z0;
+					
+                    xadd_a = X0;
+					yadd_a = Y0;
+					zadd_a = Z0;
+                    xadd_b = X1;
+					yadd_b = Y1;
+					zadd_b = Z1;
+					
 					#10;
 					X1 = xadd_o; // register output
 					Y1 = yadd_o;
 					Z1 = zadd_o;
 					#10;
+					//$fwrite(verilog_output, "P(%b)=(X,Y,Z)=(%b,%b,%b)\n",i,xadd_o,yadd_o,zadd_o);
 			   end
 				#10;
 				$fwrite(verilog_output, "P(%d)=(X,Y,Z)=(%b,%b,%b)\n",i,X1,Y1,Z1);

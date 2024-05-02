@@ -63,7 +63,7 @@ module tb_pointAddition;
         $fwrite(verilog_output, "X0 = %b, Y0 = %b Z0 = %b\n",X0,Y0,Z0);
         $fwrite(verilog_output, "X1 = %b, Y1 = %b Z1 = %b\n",X1,Y1,Z1);
         $fwrite(verilog_output, "X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
-        $monitor(verilog_output, "X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
+        $display("X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
 
         #10; // ((X2+X+1), (X2+1)) + ((X2+X), 1) = ((X2+X), (X2+X+1))
         X0 = 3'b110;
@@ -76,7 +76,21 @@ module tb_pointAddition;
         $fwrite(verilog_output, "X0 = %b, Y0 = %b Z0 = %b\n",X0,Y0,Z0);
         $fwrite(verilog_output, "X1 = %b, Y1 = %b Z1 = %b\n",X1,Y1,Z1);
         $fwrite(verilog_output, "X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
-        $monitor(verilog_output, "X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
+        $display("X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
+
+        #10; // P13((X2 + x), (0),  0) + ((X2+X), 1,1) = ((X2+X), 1) or O + P = P
+        
+        X0 = 3'b110;
+        Y0 = 3'b001;
+        Z0 = 3'b001; 
+        X1 = 3'b000;
+        Y1 = 3'b000;
+        Z1 = 3'b000; 
+        #10;
+        $fwrite(verilog_output, "X0 = %b, Y0 = %b Z0 = %b\n",X0,Y0,Z0);
+        $fwrite(verilog_output, "X1 = %b, Y1 = %b Z1 = %b\n",X1,Y1,Z1);
+        $fwrite(verilog_output, "X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
+        $display("X2 = %b, Y2 = %b Z2 = %b\n",X2,Y2,Z2);
         $fclose(verilog_output);
     end
 

@@ -36,6 +36,7 @@ module pointAddition(
     wire[2:0] z0_2,z1_2,e_2,a_e_2,f_a_e_2;
     wire[2:0] d_2,c_2,c_2_H,d2_b0_E,d2_b0,d2_a0,H_I,Z2_J;
 
+    
     //*********************A0***********************
     GFSQR GFSQR1(.A(Z0),.SQR(z0_2));
     GFMult GFMult1(.A(Y1),.B(z0_2),.Z(A0));
@@ -94,23 +95,35 @@ module pointAddition(
     GFMult GFMult14(.A(Z2),.B(J),.Z(Z2_J));
     GFADD GFADD8(.A(H_I),.B(Z2_J),.Z(Y2));
 
+    // Conditional assignment based on Z1
 
-
-
+    // Check conditions and assign outputs based on Z0 and Z1
+    // always @*
+    // begin
+    //     if (Z0 == 3'b000)  // Check if Z0 is equal to 0
+    //     begin
+    //         // Set output to (X1, Y1, Z1) since Z0 is 0
+    //         X2 = X1;
+    //         Y2 = Y1;
+    //         Z2 = Z1;
+    //     end
+    //     else if (Z1 == 3'b000)  // Check if Z1 is equal to 0
+    //     begin
+    //         // Set output to (X0, Y0, Z0) since Z1 is 0
+    //         X2 = X0;
+    //         Y2 = Y0;
+    //         Z2 = Z0;
+    //     end
+    //     else
+    //     begin
+    //         // Default case (both Z0 and Z1 are non-zero)
+    //         // You can choose to output (X0, Y0, Z0) or (X1, Y1, Z1) based on your logic
+    //         // For this example, output (X0, Y0, Z0)
+    //         X2 = X2;
+    //         Y2 = Y2;
+    //         Z2 = Z2;
+    //     end
+    // end
     
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
 
 endmodule
