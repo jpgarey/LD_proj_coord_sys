@@ -1,0 +1,158 @@
+/*
+This Singular file demonstrates the el gamal cryptosystem
+*/
+
+// Key generation select d as 2 to use point doubling to calculate
+// e2
+proc Keygen(list e1, int d){
+list e2;
+for(j = 1; j<d; j = j+1){
+    // doubling point first
+    //printf("Point %s: ",j + 1);
+    if( j == 1){
+    e2 = PplusP(e1);    
+    //printf("P = (%s, %s)", e2[1], e2[2]);
+    }
+    else{   
+      e2 =  PplusQ(e1,e2);
+      //printf("P = (%s, %s)", e2[1], e2[2]);
+    }   
+}
+
+return(e2);
+}
+
+// Key generation select d as 2 to use point doubling to calculate
+// e2
+proc Encrypt(list e1,list e2, list P, int r){
+list C1,C2;
+int j;
+for(j = 1; j<r; j = j+1){
+    // doubling point first
+    //printf("Point %s: ",j + 1);
+    if( j == 1){
+    C1 = PplusP(e1);    
+    //printf("P = (%s, %s)", e2[1], e2[2]);
+    }
+    else{   
+      C1 =  PplusQ(e1,C1);
+      //printf("P = (%s, %s)", e2[1], e2[2]);
+    }   
+}
+int j;
+for(j = 1; j<r; j = j+1){
+    // doubling point first
+    //printf("Point %s: ",j + 1);
+    if( j == 1){
+    C2 = PplusP(e2);    
+    //printf("P = (%s, %s)", e2[1], e2[2]);
+    }
+    else{   
+      C2 =  PplusQ(e2,C2);
+      //printf("P = (%s, %s)", e2[1], e2[2]);
+    }   
+}
+
+C2 = PplusQ(P,C2);
+
+return(C1,C2);
+}
+
+proc Decrypt(list C1,list C2, int d){
+list C3, C1_inverse,PlainText;
+int j;
+for(j = 1; j<d; j = j+1){
+    // doubling point first
+    //printf("Point %s: ",j + 1);
+    if( j == 1){
+    C3 = PplusP(C1);    
+    //printf("P = (%s, %s)", e2[1], e2[2]);
+    }
+    else{   
+      C3 =  PplusQ(C1,C3);
+      //printf("P = (%s, %s)", e2[1], e2[2]);
+    }   
+}
+
+/**********************************************************************
+START of main script
+***********************************************************************/
+number C1_inverse_1,C1_inverse_2;
+"C1 times d";
+C3;
+"------";
+C1_inverse = C3[1],C3[1] + C3[2];
+"C1 inverse";
+C1_inverse;
+"---------";
+PlainText = PplusQ(C2,C1_inverse);
+return(PlainText);
+
+}
+
+print(" ");
+print("LD ECC ENCRYPTION / DECRYPTION");
+printf("El gamal Encipherment");
+list e1,e2,PlainText,Encription,Decription,C1,C2;
+number e1_1,e2_2,p1,p2;
+
+e1_1 = X^6;
+e2_2 = 1;
+e1 = e1_1, e2_2;
+int d;
+d = 4;
+e2 = Keygen(e1,d);
+printf("d = %s",d);
+printf("e1 = (%s, %s)", e1[1], e1[2]);
+printf("e2 = (%s, %s)", e2[1], e2[2]);
+
+p1 = X + 1;
+p2 = X + 1;
+PlainText = p1,p2;
+printf("Plain text Value = (%s, %s)", p1, p2);
+
+int r_token;
+r_token = 3;
+printf("r = %s",r_token);
+Encription = Encrypt(e1,e2,PlainText,r_token);
+//"C1 is:";
+"";
+C1 = Encription[1];
+C2 = Encription[2];
+"C1 and C2:";
+printf("Encripted Value = (%s), (%s)", C1, C2);
+
+Decription = Decrypt(C1,C2, 4);
+printf("Decripted Value = (%s, %s)", Decription[1], Decription[2]);
+
+"";
+"VERIFYING C1 IN HARDWARE in singular is supposed to be (A5,0)";
+X3 = X^2 + X + 1;
+Y3 = 0;
+Z3 = X^2+X;
+"making sure the values are the same dividing by Z3:";
+printf("(X3,Y3,Z3) = (%s,%s,%s)",X3,Y3,Z3);
+printf("X3/Z3 = %s",X3/Z3);
+printf("Y3/Z3^2 = %s",Y3/Z3^2);
+
+"";
+"VERIFYING C2 IN HARDWARE in singular is supposed to be (A3,A5) or (X2 +1 , X + 1)";
+X3 = X^2;
+Y3 = X^2 + 1;
+Z3 = X^2 + X;
+"making sure the values are the same dividing by Z3:";
+printf("(X3,Y3,Z3) = (%s,%s,%s)",X3,Y3,Z3);
+printf("X3/Z3 = %s",X3/Z3);
+printf("Y3/Z3^2 = %s",Y3/Z3^2);
+
+
+"";
+"VERIFYING PLAIN TEXT BACK IN HARDWARE  (X +1 , X + 1)";
+X3 = X + 1;
+Y3 = X + 1;
+Z3 = 1;
+"making sure the values are the same dividing by Z3:";
+printf("(X3,Y3,Z3) = (%s,%s,%s)",X3,Y3,Z3);
+printf("X3/Z3 = %s",X3/Z3);
+printf("Y3/Z3^2 = %s",Y3/Z3^2);
+

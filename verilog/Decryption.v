@@ -44,20 +44,20 @@ module Decryption(
     wire ready_dC1;
     reg [N-1:0] inverse_X1,inverse_y1,inverse_Z1;
     
-    point_gen #(
-        .N(N),
-        .number_points(d*r)
-    ) d_C1 (
-        .clk(clk),
-        .reset(reset),
-        .X0(x_C1),
-        .Y0(y_C1),
-        .Z0(z_C1),
-        .X1(d_C1_X1),
-        .Y1(d_C1_Y1),
-        .Z1(d_C1_Z1),
-        .ready(ready_dC1)
-    );
+    //point_gen #( // TODO: replace with ponit double and point add stuff.
+    //    .N(N),
+    //    .number_points(d*r)
+    //) d_C1 (
+    //    .clk(clk),
+    //    .reset(reset),
+    //    .X0(x_C1),
+    //    .Y0(y_C1),
+    //    .Z0(z_C1),
+    //    .X1(d_C1_X1),
+    //    .Y1(d_C1_Y1),
+    //    .Z1(d_C1_Z1),
+    //    .ready(ready_dC1)
+    //);
 
     pointAddition c2 (
         .X0(x_C2),
