@@ -77,20 +77,20 @@ module Encryption(
         .ready(ready_c1)
     );
 
-    //point_gen #( // TODO: replace with ponit double and point add stuff.
-    //    .N(N),
-    //    .number_points(d*r)
-    //) r_e2 (
-    //    .clk(clk),
-    //    .reset(reset_r_e2),
-    //    .X0(e2_X1),
-    //    .Y0(e2_Y1),
-    //    .Z0(e2_Z1),
-    //    .X1(r_e2_X1),
-    //    .Y1(r_e2_Y1),
-    //    .Z1(r_e2_Z1),
-    //    .ready(ready_r_e2)
-    //);
+    point_gen #( // TODO: replace with ponit double and point add stuff.
+        .N(N),
+        .number_points(d*r)
+    ) r_e2 (
+        .clk(clk),
+        .reset(reset_r_e2),
+        .X0(e2_X1),
+        .Y0(e2_Y1),
+        .Z0(e2_Z1),
+        .X1(r_e2_X1),
+        .Y1(r_e2_Y1),
+        .Z1(r_e2_Z1),
+        .ready(ready_r_e2)
+    );
 
     pointAddition c2 (
         .X0(x_Plaintext),
